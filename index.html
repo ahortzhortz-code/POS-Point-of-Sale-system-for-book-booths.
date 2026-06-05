@@ -3,250 +3,283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ระบบคิดเงิน - บูธหนังสือ (Pixel Art Pastel)</title>
+    <title>ระบบคิดเงิน - บูธหนังสือ (Princess & Pauper)</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Fonts: Kanit (สำหรับภาษาไทย) และ Press Start 2P (สำหรับตัวเลขและอังกฤษแนว Pixel) -->
-    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;600;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <!-- Fonts: Kanit (ภาษาไทย) และ Playfair Display (ความหรูหรา/ตัวเลข) -->
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
         :root {
-            --pastel-purple: #CDB4DB; /* ม่วง */
-            --pastel-yellow: #FDFD96; /* เหลือง */
-            --pastel-blue: #A2D2FF;   /* ฟ้า */
-            --pastel-pink: #FFC8DD;   /* ชมพู (เผื่อใช้แซม) */
-            --pixel-black: #1a1a1a;
+            --anneliese-pink: #FFB7C5; /* ชมพูอ่อน */
+            --anneliese-dark: #F06292; /* ชมพูเข้ม */
+            --erika-blue: #B3E5FC;     /* ฟ้าอ่อน */
+            --erika-dark: #4FC3F7;     /* ฟ้าเข้ม */
+            --royal-gold: #D4AF37;     /* ทอง */
+            --gold-light: #FBF5B7;
+            --bg-cream: #FFFBFB;
         }
 
         body {
             font-family: 'Kanit', sans-serif;
-            background-color: #fdfaf6;
-            /* พื้นหลังลายตารางแนวน่ารักๆ */
-            background-image: 
-                linear-gradient(var(--pastel-blue) 1px, transparent 1px),
-                linear-gradient(90deg, var(--pastel-blue) 1px, transparent 1px);
-            background-size: 20px 20px;
-            background-position: center;
-            color: var(--pixel-black);
+            /* พื้นหลังไล่สีชมพูไปฟ้า ซอฟต์ๆ */
+            background: linear-gradient(135deg, #FFF0F5 0%, #F0F8FF 100%);
+            color: #4A4A4A;
+            min-height: 100vh;
         }
 
-        .pixel-font {
-            font-family: 'Press Start 2P', cursive;
+        .royal-font {
+            font-family: 'Playfair Display', serif;
         }
 
-        /* กล่องสไตล์ Pixel (ขอบหนา เงาทึบ) */
-        .pixel-box {
+        .royal-card {
+            background-color: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 10px 30px rgba(240, 98, 146, 0.1);
+        }
+
+        .royal-card-gold {
             background-color: white;
-            border: 4px solid var(--pixel-black);
-            box-shadow: 6px 6px 0px 0px var(--pixel-black);
-            border-radius: 0;
+            border-radius: 20px;
+            border: 2px solid var(--royal-gold);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.2);
+            position: relative;
         }
 
-        /* ปุ่มสไตล์ Pixel */
-        .pixel-btn {
-            border: 3px solid var(--pixel-black);
-            box-shadow: 4px 4px 0px 0px var(--pixel-black);
-            transition: all 0.1s ease-in-out;
-            cursor: pointer;
-            border-radius: 0;
-            font-weight: bold;
+        /* ปุ่มสีชมพู (Anneliese) */
+        .btn-pink {
+            background: linear-gradient(135deg, #FFD1DC, #F48FB1);
+            color: #fff;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(244, 143, 177, 0.4);
+            transition: all 0.3s ease;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            border: 2px solid white;
         }
+        .btn-pink:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(244, 143, 177, 0.6); }
+        .btn-pink:active { transform: translateY(1px); }
 
-        .pixel-btn:active {
-            transform: translate(4px, 4px);
-            box-shadow: 0px 0px 0px 0px var(--pixel-black);
+        /* ปุ่มสีฟ้า (Erika) */
+        .btn-blue {
+            background: linear-gradient(135deg, #E1F5FE, #81D4FA);
+            color: #4A4A4A;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(129, 212, 250, 0.4);
+            transition: all 0.3s ease;
+            border: 2px solid white;
         }
-        
-        .pixel-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none !important;
-            box-shadow: 4px 4px 0px 0px var(--pixel-black) !important;
-        }
+        .btn-blue:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(129, 212, 250, 0.6); }
+        .btn-blue:active { transform: translateY(1px); }
 
-        /* ช่อง Input (Input Fields) */
-        .pixel-input {
-            border: 3px solid var(--pixel-black);
-            background-color: white;
-            border-radius: 0;
+        /* ปุ่มขอบทอง */
+        .btn-gold {
+            background: linear-gradient(135deg, #FFF9C4, #FFF176);
+            color: #795548;
+            border-radius: 30px;
+            box-shadow: 0 4px 15px rgba(255, 241, 118, 0.4);
+            border: 2px solid var(--royal-gold);
+            transition: all 0.3s ease;
+        }
+        .btn-gold:hover { background: linear-gradient(135deg, #FFF59D, #FFEE58); transform: translateY(-2px); }
+
+        .royal-input {
+            border: 2px solid #F8BBD0;
+            background-color: #FFF5F7;
+            border-radius: 15px;
             outline: none;
+            transition: all 0.3s ease;
         }
-        .pixel-input:focus {
-            background-color: #fffae6;
+        .royal-input:focus {
+            border-color: #F06292;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(240, 98, 146, 0.2);
         }
 
-        /* แท็บที่ซ่อนไว้ */
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        .tab-content { display: none; opacity: 0; transition: opacity 0.4s ease; }
+        .tab-content.active { display: flex; opacity: 1; }
 
-        /* ซ่อนลูกศรใน input type="number" */
         input[type=number]::-webkit-inner-spin-button, 
-        input[type=number]::-webkit-outer-spin-button { 
-            -webkit-appearance: none; margin: 0; 
-        }
+        input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
 
-        /* ปรับแต่ง Scrollbar ให้ดู Blocky */
-        ::-webkit-scrollbar { width: 12px; height: 12px; }
-        ::-webkit-scrollbar-track { background: white; border-left: 2px solid var(--pixel-black); }
-        ::-webkit-scrollbar-thumb { background: var(--pastel-purple); border: 2px solid var(--pixel-black); }
-        ::-webkit-scrollbar-thumb:hover { background: var(--pastel-blue); }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #F8BBD0; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #F06292; }
 
-        /* ตารางสไตล์ Pixel */
         table { border-collapse: separate; border-spacing: 0; }
-        th, td { border-bottom: 2px solid var(--pixel-black); }
-        th { background-color: var(--pastel-purple); border-top: 2px solid var(--pixel-black); border-bottom: 4px solid var(--pixel-black); }
+        th { background-color: rgba(255, 255, 255, 0.6); color: #880E4F; font-weight: 600; }
+        td, th { border-bottom: 1px solid #FCE4EC; }
+        tr:last-child td { border-bottom: none; }
+
+        /* ข้อความสีทองไล่ระดับ */
+        .text-gradient-gold {
+            background: linear-gradient(to right, #B8860B, #FFD700, #B8860B);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
     </style>
 </head>
 <body class="h-screen flex flex-col">
 
-    <header class="bg-[#CDB4DB] border-b-4 border-black p-4 flex justify-between items-center z-10" style="box-shadow: 0 4px 0 0 #1a1a1a;">
-        <div class="flex items-center group cursor-pointer bg-white px-3 py-1 border-2 border-black pixel-box shadow-none" onclick="openBoothNameModal()" title="คลิกเพื่อเปลี่ยนชื่อบูธ">
-            <h1 class="text-xl font-bold flex items-center">
-                <i class="fas fa-store mr-2 text-[#A2D2FF]" style="text-shadow: 1px 1px 0 #000;"></i> 
-                <span id="display-booth-name">POS บูธหนังสือ</span>
-                <i class="fas fa-pencil-alt ml-2 text-gray-400 group-hover:text-black transition-colors text-sm"></i>
+    <header class="bg-white/80 backdrop-blur-md border-b border-pink-200 p-4 flex justify-between items-center z-10 shadow-sm relative">
+        <!-- เส้นตกแต่งสีทองด้านล่างสุดของ Header -->
+        <div class="absolute bottom-0 left-0 w-full h-[2px] bg-gradient-to-r from-yellow-200 via-yellow-400 to-yellow-200"></div>
+        
+        <div class="flex items-center group cursor-pointer bg-pink-50 px-5 py-2 rounded-full border border-pink-200 shadow-sm transition-all hover:shadow-md hover:bg-pink-100" onclick="openBoothNameModal()" title="คลิกเพื่อเปลี่ยนชื่อบูธ">
+            <h1 class="text-xl md:text-2xl font-bold flex items-center royal-font text-[#D81B60]">
+                <i class="fas fa-crown text-[#D4AF37] mr-3"></i>
+                <span id="display-booth-name" class="tracking-wide">Princess Boutique</span>
+                <i class="fas fa-pen ml-3 text-pink-300 group-hover:text-pink-500 transition-colors text-xs"></i>
             </h1>
         </div>
-        <div class="flex space-x-3">
-            <button onclick="switchTab('checkout')" id="btn-checkout" class="pixel-btn px-4 py-2 bg-[#A2D2FF] text-black active-tab">
-                <i class="fas fa-cash-register mr-1"></i> คิดเงิน
+        
+        <div class="flex space-x-4">
+            <button onclick="switchTab('checkout')" id="btn-checkout" class="px-6 py-2 rounded-full font-medium transition-all btn-pink flex items-center">
+                <i class="fas fa-heart mr-2"></i> คิดเงิน
             </button>
-            <button onclick="switchTab('inventory')" id="btn-inventory" class="pixel-btn px-4 py-2 bg-[#FDFD96] text-black">
-                <i class="fas fa-boxes mr-1"></i> สินค้า
+            <button onclick="switchTab('inventory')" id="btn-inventory" class="px-6 py-2 rounded-full font-medium transition-all bg-white text-gray-500 border border-gray-200 hover:bg-blue-50 flex items-center">
+                <i class="fas fa-music mr-2 text-blue-400"></i> สินค้า
             </button>
         </div>
     </header>
 
-    <main class="flex-grow overflow-hidden flex flex-col p-4">
+    <main class="flex-grow overflow-hidden flex flex-col p-4 md:p-6">
 
-        <!-- แท็บคิดเงิน (Checkout) -->
-        <div id="tab-checkout" class="tab-content active h-full flex flex-col md:flex-row gap-6">
+        <div id="tab-checkout" class="tab-content active h-full flex-col md:flex-row gap-6">
             
             <!-- ด้านซ้าย: รายการสินค้าที่เลือก (Cart) -->
-            <div class="w-full md:w-2/3 flex flex-col gap-4">
+            <div class="w-full md:w-2/3 flex flex-col gap-5 relative">
                 
-                <!-- ช่องสแกนบาร์โค้ด (ย้ายมาไว้ด้านบนให้เด่น) -->
-                <div class="pixel-box p-4 bg-[#FDFD96] flex items-center gap-3">
-                    <i class="fas fa-barcode text-2xl drop-shadow-[2px_2px_0_rgba(0,0,0,0.2)]"></i>
+                <!-- ช่องสแกนบาร์โค้ด -->
+                <div class="royal-card p-2 pl-4 flex items-center gap-3 relative overflow-hidden">
+                    <div class="absolute left-0 top-0 bottom-0 w-2 bg-pink-300"></div>
+                    <i class="fas fa-barcode text-2xl text-pink-400"></i>
                     <form id="barcode-form" class="flex-grow flex gap-2" onsubmit="handleBarcodeSubmit(event)">
-                        <input type="text" id="barcode-input" placeholder="สแกน หรือ พิมพ์รหัส..." 
-                            class="w-full px-4 py-2 text-lg pixel-input font-bold" autofocus autocomplete="off">
-                        <button type="submit" class="pixel-btn bg-[#CDB4DB] px-6 py-2">เพิ่ม</button>
+                        <input type="text" id="barcode-input" placeholder="สแกนบาร์โค้ด หรือ พิมพ์รหัส..." 
+                            class="w-full px-4 py-3 text-lg bg-transparent outline-none font-medium text-gray-700 placeholder-pink-200" autofocus autocomplete="off">
+                        <button type="submit" class="btn-blue px-8 py-2 font-semibold">เพิ่ม</button>
                     </form>
                 </div>
 
                 <!-- ตารางตะกร้าสินค้า -->
-                <div class="pixel-box flex-grow flex flex-col bg-white overflow-hidden">
-                    <div class="p-3 border-b-4 border-black bg-[#A2D2FF] flex justify-between items-center">
-                        <h2 class="text-lg font-bold">🛒 รายการสั่งซื้อ</h2>
-                        <button onclick="clearCart()" class="pixel-btn bg-[#FFC8DD] px-3 py-1 text-sm">
-                            <i class="fas fa-trash-alt mr-1"></i> ล้าง
+                <div class="royal-card flex-grow flex flex-col overflow-hidden">
+                    <div class="p-4 border-b border-pink-100 flex justify-between items-center bg-white/50 rounded-t-20px">
+                        <h2 class="text-lg font-bold text-[#D81B60] flex items-center">
+                            <i class="fas fa-shopping-bag mr-2"></i> รายการของท่านหญิง
+                        </h2>
+                        <button onclick="clearCart()" class="text-sm px-4 py-1.5 rounded-full border border-pink-200 text-pink-500 hover:bg-pink-50 transition-colors">
+                            <i class="fas fa-eraser mr-1"></i> ล้างตะกร้า
                         </button>
                     </div>
                     
-                    <div class="flex-grow overflow-y-auto p-4 bg-white">
+                    <div class="flex-grow overflow-y-auto p-4">
                         <table class="w-full text-left">
                             <thead>
                                 <tr>
-                                    <th class="p-2 font-bold w-1/2">สินค้า</th>
-                                    <th class="p-2 font-bold text-center w-1/6">ราคา</th>
-                                    <th class="p-2 font-bold text-center w-1/6">จำนวน</th>
-                                    <th class="p-2 font-bold text-right w-1/6">รวม</th>
-                                    <th class="p-2 w-8 border-b-4 border-black bg-[#CDB4DB]"></th>
+                                    <th class="p-3 w-1/2 rounded-tl-lg">รายการ</th>
+                                    <th class="p-3 text-center w-1/6">ราคา</th>
+                                    <th class="p-3 text-center w-1/6">จำนวน</th>
+                                    <th class="p-3 text-right w-1/6 rounded-tr-lg">รวม</th>
+                                    <th class="p-3 w-8"></th>
                                 </tr>
                             </thead>
-                            <tbody id="cart-items" class="font-semibold">
-                                <!-- รายการสินค้าจะถูกเพิ่มที่นี่ด้วย JavaScript -->
-                                <tr><td colspan="5" class="py-8 text-center text-gray-400">ยังไม่มีสินค้าในตะกร้า</td></tr>
+                            <tbody id="cart-items" class="text-gray-600">
+                                <!-- สินค้าในตะกร้า -->
+                                <tr><td colspan="5" class="py-12 text-center text-pink-300 font-medium"><i class="fas fa-magic mr-2"></i> ยังไม่มีสินค้าในตะกร้า...</td></tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
             </div>
 
-            <!-- ด้านขวา: ส่วนชำระเงิน -->
-            <div class="w-full md:w-1/3 flex flex-col gap-6">
+            <div class="w-full md:w-1/3 flex flex-col gap-5">
                 
                 <!-- กล่องสรุปยอดเงิน (ยอดรวม) -->
-                <div class="pixel-box bg-[#CDB4DB] p-6 text-center flex flex-col justify-center">
-                    <h3 class="font-bold text-black mb-2 text-lg">ยอดรวมทั้งหมด (฿)</h3>
-                    <div id="cart-total" class="text-4xl font-bold pixel-font text-white drop-shadow-[3px_3px_0_#000] tracking-wider">0.00</div>
+                <div class="royal-card-gold p-8 text-center flex flex-col justify-center bg-gradient-to-br from-white to-pink-50">
+                    <div class="absolute top-2 right-2 text-yellow-400 opacity-50"><i class="fas fa-star"></i></div>
+                    <div class="absolute bottom-2 left-2 text-yellow-400 opacity-50"><i class="fas fa-star"></i></div>
+                    <h3 class="font-medium text-gray-500 mb-1">ยอดรวมทั้งหมด (THB)</h3>
+                    <div id="cart-total" class="text-5xl royal-font text-gradient-gold tracking-wider">0.00</div>
                 </div>
 
                 <!-- กล่องคำนวณเงินทอน -->
-                <div class="pixel-box bg-white p-5 flex-grow flex flex-col">
-                    <h3 class="text-lg font-bold border-b-2 border-black pb-2 mb-4 bg-[#FDFD96] px-2 -mx-5 -mt-5 pt-4 border-t-0 shadow-[0_4px_0_0_#000] mb-6">💰 รับชำระเงิน</h3>
+                <div class="royal-card p-6 flex-grow flex flex-col">
+                    <h3 class="text-lg font-bold text-[#4FC3F7] mb-4 flex items-center">
+                        <i class="fas fa-coins mr-2 text-yellow-400"></i> ชำระเงิน
+                    </h3>
                     
-                    <div class="mb-4">
-                        <label class="block text-sm font-bold mb-1">รับเงินมา (฿)</label>
-                        <input type="number" id="cash-received" placeholder="0" oninput="calculateChange()"
-                            class="w-full px-4 py-3 text-2xl text-right font-bold pixel-input bg-[#A2D2FF] placeholder-gray-600">
+                    <div class="mb-5">
+                        <label class="block text-sm font-medium text-gray-500 mb-2 ml-1">รับเงินมา (฿)</label>
+                        <input type="number" id="cash-received" placeholder="0.00" oninput="calculateChange()"
+                            class="w-full px-5 py-4 text-3xl text-right royal-font text-gray-700 royal-input">
                     </div>
                     
-                    <div class="flex justify-between items-center mb-6 bg-gray-100 p-3 border-2 border-black border-dashed">
-                        <span class="font-bold text-lg">เงินทอน:</span>
-                        <span id="change-amount" class="text-2xl font-bold pixel-font text-red-500 drop-shadow-[1px_1px_0_#000]">0.00</span>
+                    <div class="flex justify-between items-center mb-6 bg-blue-50/50 p-4 rounded-xl border border-blue-100">
+                        <span class="font-medium text-gray-600">เงินทอน:</span>
+                        <span id="change-amount" class="text-3xl royal-font text-[#F06292]">0.00</span>
                     </div>
 
                     <!-- ปุ่มชำระเงินด่วน -->
                     <div class="grid grid-cols-3 gap-3 mb-6">
-                        <button onclick="addCash(20)" class="pixel-btn bg-white py-2 text-green-700 hover:bg-[#FDFD96]">+20</button>
-                        <button onclick="addCash(50)" class="pixel-btn bg-white py-2 text-green-700 hover:bg-[#FDFD96]">+50</button>
-                        <button onclick="addCash(100)" class="pixel-btn bg-white py-2 text-green-700 hover:bg-[#FDFD96]">+100</button>
-                        <button onclick="addCash(500)" class="pixel-btn bg-white py-2 text-green-700 hover:bg-[#FDFD96]">+500</button>
-                        <button onclick="addCash(1000)" class="pixel-btn bg-white py-2 text-green-700 hover:bg-[#FDFD96]">+1000</button>
-                        <button onclick="exactCash()" class="pixel-btn bg-[#CDB4DB] py-2 text-black">พอดี</button>
+                        <button onclick="addCash(20)" class="btn-blue bg-none bg-white text-blue-500 border border-blue-200 py-2 hover:bg-blue-50 rounded-xl shadow-sm">+20</button>
+                        <button onclick="addCash(50)" class="btn-blue bg-none bg-white text-blue-500 border border-blue-200 py-2 hover:bg-blue-50 rounded-xl shadow-sm">+50</button>
+                        <button onclick="addCash(100)" class="btn-blue bg-none bg-white text-blue-500 border border-blue-200 py-2 hover:bg-blue-50 rounded-xl shadow-sm">+100</button>
+                        <button onclick="addCash(500)" class="btn-blue bg-none bg-white text-blue-500 border border-blue-200 py-2 hover:bg-blue-50 rounded-xl shadow-sm">+500</button>
+                        <button onclick="addCash(1000)" class="btn-blue bg-none bg-white text-blue-500 border border-blue-200 py-2 hover:bg-blue-50 rounded-xl shadow-sm">+1000</button>
+                        <button onclick="exactCash()" class="btn-gold py-2 rounded-xl text-sm font-bold">พอดี</button>
                     </div>
 
-                    <button onclick="completeTransaction()" class="pixel-btn w-full py-4 mt-auto bg-[#A2D2FF] text-xl flex justify-center items-center hover:bg-[#8ec3f8]">
-                        <i class="fas fa-check-square mr-2"></i> คิดเงินเลย!
+                    <button onclick="completeTransaction()" class="btn-pink w-full py-4 mt-auto text-xl font-bold flex justify-center items-center rounded-2xl">
+                        <i class="fas fa-check-circle mr-2"></i> ชำระเงินเสร็จสิ้น
                     </button>
                 </div>
             </div>
             
-            <!-- แผงปุ่มสินค้าลัด -->
-            <div id="quick-items-panel" class="absolute bottom-0 left-0 w-full md:w-2/3 h-56 pixel-box bg-white p-4 flex flex-col z-20 transition-transform duration-300 transform translate-y-full border-b-0 border-l-0">
-                <div class="flex justify-between items-center mb-3 border-b-2 border-black pb-2">
-                    <h3 class="font-bold bg-[#FDFD96] px-2 py-1 border-2 border-black">📦 แตะเพื่อเพิ่มสินค้า</h3>
-                    <button onclick="toggleQuickPanel()" class="pixel-btn bg-[#FFC8DD] px-3 py-1">
-                        <i class="fas fa-times"></i> ปิด
+            <div id="quick-items-panel" class="absolute bottom-0 left-0 w-full md:w-2/3 h-64 royal-card rounded-b-none p-5 flex flex-col z-20 transition-transform duration-500 transform translate-y-full border-b-0">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="font-bold text-[#D81B60] text-lg flex items-center">
+                        <i class="fas fa-wand-magic-sparkles mr-2 text-yellow-400"></i> เลือกสินค้าแบบด่วน
+                    </h3>
+                    <button onclick="toggleQuickPanel()" class="w-8 h-8 rounded-full bg-pink-100 text-pink-500 flex items-center justify-center hover:bg-pink-200 transition-colors">
+                        <i class="fas fa-times"></i>
                     </button>
                 </div>
-                <div id="quick-items-container" class="flex-grow overflow-y-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 p-1">
-                    <!-- ปุ่มสินค้าด่วนจะแสดงที่นี่ -->
+                <div id="quick-items-container" class="flex-grow overflow-y-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-1">
+                    <!-- ปุ่มสินค้าด่วน -->
                 </div>
             </div>
             <!-- ปุ่มเปิดแผงสินค้าด่วน -->
-            <button onclick="toggleQuickPanel()" class="absolute bottom-6 left-6 pixel-btn bg-[#FDFD96] p-4 z-10 flex items-center gap-2 hover:bg-[#fff970]">
-                <i class="fas fa-gamepad text-xl"></i> <span class="hidden sm:inline font-bold">เมนูสินค้า</span>
+            <button onclick="toggleQuickPanel()" class="absolute bottom-6 left-6 btn-gold px-6 py-3 z-10 flex items-center gap-2 rounded-full font-medium shadow-lg hover:shadow-xl">
+                <i class="fas fa-grip-horizontal text-lg"></i> <span class="hidden sm:inline">เมนูสินค้า</span>
             </button>
         </div>
 
-        <!-- แท็บจัดการสินค้า (Inventory) -->
-        <div id="tab-inventory" class="tab-content h-full overflow-y-auto pb-8">
-            <div class="max-w-4xl mx-auto pixel-box p-6 bg-white">
-                <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4">
-                    <h2 class="text-2xl font-bold bg-[#A2D2FF] px-4 py-2 border-2 border-black inline-block shadow-[4px_4px_0_0_#000]">
-                        <i class="fas fa-database mr-2"></i> ฐานข้อมูลสินค้า
+        <div id="tab-inventory" class="tab-content h-full overflow-y-auto pb-8 pt-2">
+            <div class="max-w-4xl mx-auto royal-card p-6 md:p-8 w-full">
+                <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-4 border-b border-pink-100 pb-4">
+                    <h2 class="text-2xl font-bold text-[#4FC3F7] flex items-center royal-font">
+                        <i class="fas fa-book-open mr-3 text-pink-300"></i> ฐานข้อมูลสินค้า
                     </h2>
-                    <button onclick="openProductModal()" class="pixel-btn bg-[#CDB4DB] px-4 py-2 flex items-center">
-                        <i class="fas fa-plus-square mr-2"></i> เพิ่มไอเทมใหม่
+                    <button onclick="openProductModal()" class="btn-blue px-5 py-2.5 flex items-center font-medium rounded-full">
+                        <i class="fas fa-plus mr-2"></i> เพิ่มสินค้าใหม่
                     </button>
                 </div>
 
-                <div class="overflow-x-auto border-4 border-black">
-                    <table class="w-full text-left bg-white">
-                        <thead>
+                <div class="overflow-x-auto rounded-xl border border-blue-100 bg-white/50">
+                    <table class="w-full text-left">
+                        <thead class="bg-blue-50/50">
                             <tr>
-                                <th class="p-3">รหัส/บาร์โค้ด</th>
-                                <th class="p-3">ชื่อสินค้า</th>
-                                <th class="p-3 text-right">ราคา (฿)</th>
-                                <th class="p-3 text-center">จัดการ</th>
+                                <th class="p-4 text-[#4FC3F7]">รหัส/บาร์โค้ด</th>
+                                <th class="p-4 text-[#4FC3F7]">ชื่อสินค้า</th>
+                                <th class="p-4 text-right text-[#4FC3F7]">ราคา (฿)</th>
+                                <th class="p-4 text-center text-[#4FC3F7]">จัดการ</th>
                             </tr>
                         </thead>
-                        <tbody id="inventory-list" class="font-semibold">
-                            <!-- รายการสินค้าจะแสดงที่นี่ -->
+                        <tbody id="inventory-list" class="text-gray-600">
+                            <!-- รายการสินค้า -->
                         </tbody>
                     </table>
                 </div>
@@ -254,104 +287,106 @@
         </div>
     </main>
 
+    
     <!-- Modal เพิ่ม/แก้ไข สินค้า -->
-    <div id="product-modal" class="fixed inset-0 bg-[#CDB4DB] bg-opacity-80 flex items-center justify-center hidden z-50 backdrop-blur-sm p-4">
-        <div class="pixel-box bg-white w-full max-w-md p-0 flex flex-col">
-            <div class="bg-[#FDFD96] border-b-4 border-black px-4 py-3 flex justify-between items-center">
-                <h3 id="modal-title" class="font-bold text-lg">เพิ่มไอเทมใหม่</h3>
-                <button onclick="closeProductModal()" class="pixel-btn bg-[#FFC8DD] px-2 py-1">X</button>
+    <div id="product-modal" class="fixed inset-0 bg-pink-100/60 flex items-center justify-center hidden z-50 backdrop-blur-sm p-4 transition-opacity duration-300">
+        <div class="royal-card w-full max-w-md p-0 flex flex-col overflow-hidden shadow-2xl">
+            <div class="bg-gradient-to-r from-pink-100 to-blue-100 px-6 py-4 flex justify-between items-center border-b border-white">
+                <h3 id="modal-title" class="font-bold text-[#D81B60] text-lg flex items-center"><i class="fas fa-star text-yellow-400 mr-2"></i> เพิ่มสินค้าใหม่</h3>
+                <button onclick="closeProductModal()" class="text-gray-400 hover:text-pink-500"><i class="fas fa-times text-xl"></i></button>
             </div>
             
-            <form id="product-form" class="p-5 bg-white" onsubmit="saveProduct(event)">
+            <form id="product-form" class="p-6 bg-white/90" onsubmit="saveProduct(event)">
                 <input type="hidden" id="edit-index" value="-1">
                 
-                <div class="mb-4">
-                    <label class="block font-bold mb-2">รหัสสินค้า / บาร์โค้ด *</label>
+                <div class="mb-5">
+                    <label class="block font-medium text-gray-600 mb-2 text-sm ml-1">รหัสสินค้า / บาร์โค้ด</label>
                     <div class="flex gap-2">
-                        <input type="text" id="prod-barcode" required class="flex-grow pixel-input p-2 font-mono" placeholder="ยิงสแกนเลย...">
-                        <button type="button" onclick="generateRandomBarcode()" class="pixel-btn bg-[#A2D2FF] px-3 text-sm">สุ่มรหัส</button>
+                        <input type="text" id="prod-barcode" required class="flex-grow royal-input px-4 py-2" placeholder="สแกนบาร์โค้ด...">
+                        <button type="button" onclick="generateRandomBarcode()" class="btn-blue px-4 text-sm rounded-xl" title="สุ่มรหัส"><i class="fas fa-dice"></i></button>
                     </div>
                 </div>
                 
-                <div class="mb-4">
-                    <label class="block font-bold mb-2">ชื่อสินค้า *</label>
-                    <input type="text" id="prod-name" required class="w-full pixel-input p-2" placeholder="เช่น โพสอิท ลายแมว">
+                <div class="mb-5">
+                    <label class="block font-medium text-gray-600 mb-2 text-sm ml-1">ชื่อสินค้า</label>
+                    <input type="text" id="prod-name" required class="w-full royal-input px-4 py-2" placeholder="เช่น เข็มกลัดกุหลาบ">
                 </div>
                 
                 <div class="mb-6">
-                    <label class="block font-bold mb-2">ราคา (฿) *</label>
-                    <input type="number" id="prod-price" required min="0" step="0.25" class="w-full pixel-input p-2 font-mono" placeholder="0.00">
+                    <label class="block font-medium text-gray-600 mb-2 text-sm ml-1">ราคา (฿)</label>
+                    <input type="number" id="prod-price" required min="0" step="0.25" class="w-full royal-input px-4 py-2 royal-font text-lg" placeholder="0.00">
                 </div>
                 
-                <div class="flex items-center justify-end gap-3 pt-4 border-t-2 border-dashed border-gray-300">
-                    <button type="button" onclick="closeProductModal()" class="pixel-btn bg-gray-200 px-4 py-2">ยกเลิก</button>
-                    <button type="submit" class="pixel-btn bg-[#A2D2FF] px-6 py-2">บันทึก (SAVE)</button>
+                <div class="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
+                    <button type="button" onclick="closeProductModal()" class="px-5 py-2 rounded-full text-gray-500 hover:bg-gray-100 transition-colors">ยกเลิก</button>
+                    <button type="submit" class="btn-pink px-6 py-2">บันทึก</button>
                 </div>
             </form>
         </div>
     </div>
 
     <!-- Modal เปลี่ยนชื่อบูธ -->
-    <div id="booth-name-modal" class="fixed inset-0 bg-[#A2D2FF] bg-opacity-80 flex items-center justify-center hidden z-50 backdrop-blur-sm p-4">
-        <div class="pixel-box bg-white w-full max-w-sm">
-            <div class="bg-[#CDB4DB] border-b-4 border-black px-4 py-3 flex justify-between items-center">
-                <h3 class="font-bold text-lg">ตั้งชื่อบูธ</h3>
-                <button onclick="closeBoothNameModal()" class="pixel-btn bg-white px-2 py-1">X</button>
+    <div id="booth-name-modal" class="fixed inset-0 bg-blue-100/60 flex items-center justify-center hidden z-50 backdrop-blur-sm p-4 transition-opacity duration-300">
+        <div class="royal-card w-full max-w-sm overflow-hidden shadow-2xl">
+            <div class="bg-gradient-to-r from-blue-100 to-pink-100 px-6 py-4 flex justify-between items-center border-b border-white">
+                <h3 class="font-bold text-[#4FC3F7] text-lg">ตั้งชื่อร้านของคุณ</h3>
+                <button onclick="closeBoothNameModal()" class="text-gray-400 hover:text-blue-500"><i class="fas fa-times"></i></button>
             </div>
-            <form class="p-5" onsubmit="saveBoothName(event)">
+            <form class="p-6 bg-white/90" onsubmit="saveBoothName(event)">
                 <div class="mb-6">
-                    <label class="block font-bold mb-2">ชื่อร้าน/บูธ ของคุณ</label>
-                    <input type="text" id="input-booth-name" required class="w-full pixel-input p-2 font-bold text-center text-lg" placeholder="ใส่ชื่อบูธ...">
+                    <input type="text" id="input-booth-name" required class="w-full royal-input px-4 py-3 text-center text-lg royal-font text-[#D81B60]" placeholder="ใส่ชื่อบูธ...">
                 </div>
                 <div class="flex items-center justify-center gap-3">
-                    <button type="button" onclick="closeBoothNameModal()" class="pixel-btn bg-gray-200 px-4 py-2">ยกเลิก</button>
-                    <button type="submit" class="pixel-btn bg-[#FDFD96] px-6 py-2">ตกลง (OK)</button>
+                    <button type="button" onclick="closeBoothNameModal()" class="px-5 py-2 rounded-full text-gray-500 hover:bg-gray-100 transition-colors">ยกเลิก</button>
+                    <button type="submit" class="btn-blue px-6 py-2">ตกลง</button>
                 </div>
             </form>
         </div>
     </div>
 
-    <!-- Custom Confirm Modal (แทนที่ confirm() พื้นฐาน) -->
-    <div id="confirm-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden z-[60] p-4">
-        <div class="pixel-box bg-white p-6 max-w-sm w-full text-center">
-            <i class="fas fa-exclamation-triangle text-4xl text-[#FDFD96] drop-shadow-[2px_2px_0_#000] mb-4"></i>
-            <h3 class="font-bold text-xl mb-6" id="confirm-message">แน่ใจหรือไม่?</h3>
+    <!-- Confirm Modal -->
+    <div id="confirm-modal" class="fixed inset-0 bg-gray-900/40 flex items-center justify-center hidden z-[60] p-4 backdrop-blur-sm">
+        <div class="royal-card p-8 max-w-sm w-full text-center shadow-2xl">
+            <div class="w-16 h-16 bg-pink-100 text-pink-500 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl">
+                <i class="fas fa-question"></i>
+            </div>
+            <h3 class="font-medium text-lg mb-6 text-gray-700" id="confirm-message">ต้องการลบสินค้าชิ้นนี้หรือไม่?</h3>
             <div class="flex gap-4 justify-center">
-                <button onclick="closeConfirmModal()" class="pixel-btn bg-gray-200 px-4 py-2 w-1/2">ยกเลิก</button>
-                <button id="btn-confirm-yes" class="pixel-btn bg-[#FFC8DD] px-4 py-2 w-1/2">ลบเลย</button>
+                <button onclick="closeConfirmModal()" class="px-6 py-2 rounded-full text-gray-500 bg-gray-100 hover:bg-gray-200 w-1/2 transition-colors">ยกเลิก</button>
+                <button id="btn-confirm-yes" class="btn-pink px-6 py-2 w-1/2">ลบเลย</button>
             </div>
         </div>
     </div>
 
-    <!-- Custom Success Modal (แทนที่ alert() พื้นฐาน) -->
-    <div id="success-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden z-[60] p-4">
-        <div class="pixel-box bg-white p-0 max-w-sm w-full text-center border-4 border-black overflow-hidden">
-            <div class="bg-[#FDFD96] p-4 border-b-4 border-black">
-                <h3 class="pixel-font text-xl text-black">LEVEL UP!</h3>
+    <!-- Success Modal หรูหรา -->
+    <div id="success-modal" class="fixed inset-0 bg-gray-900/40 flex items-center justify-center hidden z-[60] p-4 backdrop-blur-md">
+        <div class="royal-card-gold p-0 max-w-sm w-full text-center overflow-hidden">
+            <div class="bg-gradient-to-r from-yellow-100 to-yellow-200 p-6 relative">
+                <i class="fas fa-crown text-4xl text-yellow-500 mb-2 drop-shadow-sm"></i>
+                <h3 class="royal-font text-2xl text-yellow-700 font-bold">ทำรายการสำเร็จ</h3>
             </div>
             <div class="p-6 bg-white">
-                <p class="font-bold text-lg mb-2 text-green-600">ทำรายการสำเร็จ!</p>
-                <div id="success-details" class="mb-6 font-semibold text-gray-700 bg-gray-100 p-3 border-2 border-dashed border-gray-400 text-left space-y-1">
+                <div id="success-details" class="mb-6 text-gray-600 bg-pink-50/50 p-4 rounded-xl border border-pink-100 text-left space-y-2 text-sm font-medium">
                 </div>
-                <button onclick="closeSuccessModal()" class="pixel-btn bg-[#A2D2FF] px-6 py-3 w-full text-lg">CONTINUE <i class="fas fa-play ml-1 text-xs"></i></button>
+                <button onclick="closeSuccessModal()" class="btn-gold px-6 py-3 w-full text-lg shadow-md">ปิดหน้าต่าง</button>
             </div>
         </div>
     </div>
 
-    <!-- แจ้งเตือนแบบ Toast สไตล์ Pixel -->
-    <div id="toast" class="fixed top-4 right-4 pixel-box bg-[#CDB4DB] text-black px-6 py-3 transition-opacity duration-300 opacity-0 pointer-events-none z-[100]">
-        <span id="toast-message" class="font-bold"><i class="fas fa-info-circle mr-2"></i> ข้อความ</span>
+    <!-- Toast แจ้งเตือนซ้ายล่างแบบนุ่มนวล -->
+    <div id="toast" class="fixed bottom-6 right-6 royal-card bg-white px-6 py-3 transition-all duration-400 opacity-0 transform translate-y-4 pointer-events-none z-[100] border-l-4 border-pink-400 flex items-center gap-3 shadow-xl">
+        <div id="toast-icon" class="text-pink-400 text-xl"><i class="fas fa-check-circle"></i></div>
+        <span id="toast-message" class="font-medium text-gray-700">ข้อความ</span>
     </div>
 
     <script>
-        // --- ข้อมูลเบื้องต้น ---
-        let boothName = 'POS บูธหนังสือ';
+        let boothName = 'Princess Boutique';
         let products = [
-            { barcode: '1001', name: 'หนังสือ นิทานทำมือ', price: 150 },
-            { barcode: '1002', name: 'สมุดบันทึก ปกหนัง', price: 89 },
-            { barcode: '1003', name: 'โปสการ์ด ภาพวาดสีน้ำ', price: 20 },
-            { barcode: '1004', name: 'สติ๊กเกอร์ไดคัท ลายแมว', price: 35 },
-            { barcode: '885000000001', name: 'กระเป๋าผ้าสกรีนลาย', price: 199 }
+            { barcode: '1001', name: 'มงกุฎดอกไม้ประดิษฐ์', price: 250 },
+            { barcode: '1002', name: 'สมุดบันทึกลายเจ้าหญิง', price: 129 },
+            { barcode: '1003', name: 'กล่องดนตรีไขลาน', price: 450 },
+            { barcode: '1004', name: 'ริบบิ้นผูกผมสีพาสเทล', price: 55 },
+            { barcode: '885000000001', name: 'ชุดน้ำชาเซรามิกจิ๋ว', price: 399 }
         ];
         let cart = [];
 
@@ -375,50 +410,63 @@
             localStorage.setItem('pos_products', JSON.stringify(products));
         }
 
-        // --- ระบบ UI ควบคุม ---
         function switchTab(tabName) {
             document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
             document.getElementById(`tab-${tabName}`).classList.add('active');
             
-            // รีเซ็ตปุ่ม
-            document.getElementById('btn-checkout').className = 'pixel-btn px-4 py-2 bg-white text-black';
-            document.getElementById('btn-inventory').className = 'pixel-btn px-4 py-2 bg-white text-black';
+            const btnCheckout = document.getElementById('btn-checkout');
+            const btnInventory = document.getElementById('btn-inventory');
             
-            // ไฮไลต์ปุ่มที่เลือก (ใช้สี Pastel ที่ต่างกัน)
+            // รีเซ็ตปุ่ม
+            btnCheckout.className = 'px-6 py-2 rounded-full font-medium transition-all bg-white text-gray-500 border border-gray-200 hover:bg-pink-50 flex items-center';
+            btnInventory.className = 'px-6 py-2 rounded-full font-medium transition-all bg-white text-gray-500 border border-gray-200 hover:bg-blue-50 flex items-center';
+            
             if(tabName === 'checkout') {
-                document.getElementById('btn-checkout').className = 'pixel-btn px-4 py-2 bg-[#A2D2FF] text-black active-tab shadow-none translate-x-[2px] translate-y-[2px]';
+                btnCheckout.className = 'px-6 py-2 rounded-full font-medium transition-all btn-pink flex items-center shadow-md';
+                btnCheckout.innerHTML = '<i class="fas fa-heart mr-2"></i> คิดเงิน';
+                btnInventory.innerHTML = '<i class="fas fa-music mr-2 text-blue-400"></i> สินค้า';
                 setTimeout(() => document.getElementById('barcode-input').focus(), 100);
             } else {
-                document.getElementById('btn-inventory').className = 'pixel-btn px-4 py-2 bg-[#FDFD96] text-black active-tab shadow-none translate-x-[2px] translate-y-[2px]';
+                btnInventory.className = 'px-6 py-2 rounded-full font-medium transition-all btn-blue flex items-center shadow-md';
+                btnInventory.innerHTML = '<i class="fas fa-music mr-2"></i> สินค้า';
+                btnCheckout.innerHTML = '<i class="fas fa-heart mr-2 text-pink-400"></i> คิดเงิน';
             }
         }
 
         function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
-            toast.innerHTML = `<span class="font-bold"><i class="fas ${type === 'error' ? 'fa-times-circle text-red-500' : 'fa-check-circle text-green-600'} mr-2"></i> ${message}</span>`;
+            const icon = document.getElementById('toast-icon');
             
-            toast.style.backgroundColor = type === 'error' ? '#FFC8DD' : '#CDB4DB';
+            document.getElementById('toast-message').textContent = message;
+            
+            if(type === 'error') {
+                toast.style.borderLeftColor = '#F06292';
+                icon.innerHTML = '<i class="fas fa-exclamation-circle text-[#F06292]"></i>';
+            } else {
+                toast.style.borderLeftColor = '#4FC3F7';
+                icon.innerHTML = '<i class="fas fa-magic text-[#4FC3F7]"></i>';
+            }
 
-            toast.classList.remove('opacity-0');
-            toast.classList.add('opacity-100');
+            toast.classList.remove('opacity-0', 'translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            
             setTimeout(() => {
-                toast.classList.remove('opacity-100');
-                toast.classList.add('opacity-0');
-            }, 2500);
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-4');
+            }, 3000);
         }
 
-        // --- ระบบตั้งชื่อบูธ ---
         function openBoothNameModal() {
             document.getElementById('input-booth-name').value = boothName;
             document.getElementById('booth-name-modal').classList.remove('hidden');
             setTimeout(() => document.getElementById('input-booth-name').focus(), 100);
         }
+        
         function closeBoothNameModal() {
             document.getElementById('booth-name-modal').classList.add('hidden');
-            if (document.getElementById('tab-checkout').classList.contains('active')) {
-                document.getElementById('barcode-input').focus();
-            }
+            if (document.getElementById('tab-checkout').classList.contains('active')) document.getElementById('barcode-input').focus();
         }
+        
         function saveBoothName(e) {
             e.preventDefault();
             const newName = document.getElementById('input-booth-name').value.trim();
@@ -427,11 +475,10 @@
                 document.getElementById('display-booth-name').textContent = boothName;
                 localStorage.setItem('pos_booth_name', boothName);
                 closeBoothNameModal();
-                showToast('เปลี่ยนชื่อร้านแล้ว!');
+                showToast('เปลี่ยนชื่อร้านเรียบร้อยแล้วค่ะ');
             }
         }
 
-        // --- ระบบตะกร้า (Checkout) ---
         function handleBarcodeSubmit(e) {
             e.preventDefault();
             const input = document.getElementById('barcode-input');
@@ -446,13 +493,10 @@
             const product = products.find(p => p.barcode === barcode);
             if (product) {
                 const existingItemIndex = cart.findIndex(item => item.barcode === barcode);
-                if (existingItemIndex >= 0) {
-                    cart[existingItemIndex].qty += 1;
-                } else {
-                    cart.push({ ...product, qty: 1 });
-                }
+                if (existingItemIndex >= 0) cart[existingItemIndex].qty += 1;
+                else cart.push({ ...product, qty: 1 });
                 updateCartDisplay();
-                showToast(`+ ${product.name}`);
+                showToast(`เพิ่ม ${product.name}`);
             } else {
                 showToast(`ไม่พบรหัส: ${barcode}`, 'error');
                 playErrorSound();
@@ -482,30 +526,30 @@
             let total = 0;
 
             if (cart.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" class="py-12 text-center text-gray-400 font-bold bg-gray-50 border-b-0">ว่างเปล่า...</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" class="py-12 text-center text-pink-300 font-medium"><i class="fas fa-magic mr-2"></i> ยังไม่มีสินค้าในตะกร้า...</td></tr>';
             } else {
                 cart.forEach((item, index) => {
                     const itemTotal = item.price * item.qty;
                     total += itemTotal;
                     const tr = document.createElement('tr');
-                    tr.className = 'hover:bg-[#FDFD96] transition-colors';
+                    tr.className = 'hover:bg-pink-50/50 transition-colors group';
                     tr.innerHTML = `
-                        <td class="p-2 border-r-2 border-black border-dashed">
-                            <div class="font-bold truncate w-40 sm:w-auto">${item.name}</div>
-                            <div class="text-[10px] text-gray-500 font-mono">${item.barcode}</div>
+                        <td class="p-3">
+                            <div class="font-medium text-gray-700 truncate w-40 sm:w-auto">${item.name}</div>
+                            <div class="text-xs text-pink-300 mt-1">${item.barcode}</div>
                         </td>
-                        <td class="p-2 text-center border-r-2 border-black border-dashed font-mono">${item.price.toFixed(2)}</td>
-                        <td class="p-2 text-center border-r-2 border-black border-dashed">
-                            <div class="flex items-center justify-center gap-1">
-                                <button onclick="updateCartItemQty(${index}, -1)" class="w-6 h-6 bg-white border-2 border-black rounded flex items-center justify-center hover:bg-[#FFC8DD] active:scale-95 font-bold">-</button>
-                                <span class="w-6 text-center font-bold">${item.qty}</span>
-                                <button onclick="updateCartItemQty(${index}, 1)" class="w-6 h-6 bg-white border-2 border-black rounded flex items-center justify-center hover:bg-[#A2D2FF] active:scale-95 font-bold">+</button>
+                        <td class="p-3 text-center royal-font text-gray-600">${item.price.toFixed(2)}</td>
+                        <td class="p-3 text-center">
+                            <div class="flex items-center justify-center gap-2">
+                                <button onclick="updateCartItemQty(${index}, -1)" class="w-7 h-7 rounded-full bg-white border border-pink-200 text-pink-400 flex items-center justify-center hover:bg-pink-100 hover:text-pink-600 transition-colors shadow-sm"><i class="fas fa-minus text-xs"></i></button>
+                                <span class="w-4 text-center font-medium">${item.qty}</span>
+                                <button onclick="updateCartItemQty(${index}, 1)" class="w-7 h-7 rounded-full bg-pink-100 border border-pink-200 text-pink-500 flex items-center justify-center hover:bg-pink-200 hover:text-pink-600 transition-colors shadow-sm"><i class="fas fa-plus text-xs"></i></button>
                             </div>
                         </td>
-                        <td class="p-2 text-right font-mono font-bold">${itemTotal.toFixed(2)}</td>
-                        <td class="p-2 text-center bg-gray-50 border-l-2 border-black border-solid">
-                            <button onclick="removeCartItem(${index})" class="text-red-500 hover:text-red-700 hover:scale-110 transition-transform">
-                                <i class="fas fa-times-circle text-lg drop-shadow-[1px_1px_0_#000]"></i>
+                        <td class="p-3 text-right royal-font font-bold text-[#D81B60]">${itemTotal.toFixed(2)}</td>
+                        <td class="p-3 text-center">
+                            <button onclick="removeCartItem(${index})" class="text-gray-300 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100">
+                                <i class="fas fa-trash-alt"></i>
                             </button>
                         </td>
                     `;
@@ -517,7 +561,6 @@
             document.getElementById('barcode-input').focus();
         }
 
-        // --- การเงิน ---
         function calculateChange() {
             const total = parseFloat(document.getElementById('cart-total').textContent) || 0;
             const cash = parseFloat(document.getElementById('cash-received').value) || 0;
@@ -526,7 +569,6 @@
             if (cash >= total && total > 0) {
                 const change = cash - total;
                 changeDisplay.textContent = change.toFixed(2);
-                changeDisplay.classList.add('text-red-500');
             } else {
                 changeDisplay.textContent = '0.00';
             }
@@ -548,22 +590,21 @@
             const cash = parseFloat(document.getElementById('cash-received').value) || 0;
 
             if (cart.length === 0) {
-                showToast('ยังไม่มีสินค้า', 'error');
+                showToast('ตะกร้าว่างเปล่าค่ะ', 'error');
                 return;
             }
             if (cash < total) {
-                showToast('รับเงินมาไม่ครบ!', 'error');
+                showToast('รับเงินมาไม่ครบค่ะ', 'error');
                 playErrorSound();
                 return;
             }
 
             const change = cash - total;
             
-            // แสดงหน้าต่าง Success
             document.getElementById('success-details').innerHTML = `
-                <div class="flex justify-between"><span>ยอดรวม:</span> <span>฿${total.toFixed(2)}</span></div>
-                <div class="flex justify-between"><span>รับเงิน:</span> <span>฿${cash.toFixed(2)}</span></div>
-                <div class="flex justify-between font-bold text-red-600 mt-2 border-t border-dashed border-gray-400 pt-2"><span>เงินทอน:</span> <span>฿${change.toFixed(2)}</span></div>
+                <div class="flex justify-between items-center border-b border-pink-100 pb-2"><span class="text-gray-500">ยอดรวมทั้งหมด</span> <span class="royal-font text-lg font-bold text-[#D81B60]">฿${total.toFixed(2)}</span></div>
+                <div class="flex justify-between items-center py-2"><span class="text-gray-500">รับเงินมา</span> <span class="royal-font text-lg">฿${cash.toFixed(2)}</span></div>
+                <div class="flex justify-between items-center bg-white p-2 rounded-lg border border-pink-100 mt-1 shadow-sm"><span class="text-pink-500 font-bold"><i class="fas fa-hand-holding-usd mr-1"></i> เงินทอน</span> <span class="royal-font text-xl font-bold text-pink-500">฿${change.toFixed(2)}</span></div>
             `;
             document.getElementById('success-modal').classList.remove('hidden');
             
@@ -575,14 +616,12 @@
             document.getElementById('barcode-input').focus();
         }
 
-        // --- สินค้าด่วน ---
         let quickPanelOpen = false;
         function toggleQuickPanel() {
             const panel = document.getElementById('quick-items-panel');
             quickPanelOpen = !quickPanelOpen;
-            if (quickPanelOpen) {
-                panel.classList.remove('translate-y-full');
-            } else {
+            if (quickPanelOpen) panel.classList.remove('translate-y-full');
+            else {
                 panel.classList.add('translate-y-full');
                 document.getElementById('barcode-input').focus();
             }
@@ -592,22 +631,27 @@
             const container = document.getElementById('quick-items-container');
             container.innerHTML = '';
             
-            // สี Pastel สลับกันสำหรับปุ่มสินค้า
-            const colors = ['bg-[#CDB4DB]', 'bg-[#FDFD96]', 'bg-[#A2D2FF]', 'bg-[#FFC8DD]'];
+            // สีสลับพาสเทลแบบหรูหรา
+            const styles = [
+                'bg-pink-50 border-pink-200 text-pink-600 hover:bg-pink-100',
+                'bg-blue-50 border-blue-200 text-blue-600 hover:bg-blue-100',
+                'bg-yellow-50 border-yellow-200 text-yellow-600 hover:bg-yellow-100',
+                'bg-purple-50 border-purple-200 text-purple-600 hover:bg-purple-100'
+            ];
             
             products.forEach((p, i) => {
                 const btn = document.createElement('button');
-                const colorClass = colors[i % colors.length];
+                const styleClass = styles[i % styles.length];
                 
-                btn.className = `pixel-btn ${colorClass} p-2 flex flex-col justify-between text-left h-24`;
+                btn.className = `p-3 rounded-2xl border ${styleClass} flex flex-col justify-between text-left h-24 transition-all shadow-sm hover:shadow-md hover:-translate-y-1`;
                 btn.onclick = () => addItemToCart(p.barcode);
                 
                 btn.innerHTML = `
                     <div class="flex items-start justify-between w-full">
-                        <i class="fas fa-box text-white drop-shadow-[1px_1px_0_#000]"></i>
-                        <span class="font-bold font-mono text-sm bg-white px-1 border border-black">฿${p.price}</span>
+                        <i class="fas fa-gift opacity-70"></i>
+                        <span class="font-bold royal-font bg-white/80 px-2 rounded-full text-xs shadow-sm py-0.5">฿${p.price}</span>
                     </div>
-                    <div class="text-sm font-bold leading-tight mt-1 line-clamp-2 w-full">
+                    <div class="text-sm font-medium leading-tight mt-2 line-clamp-2 w-full text-gray-700">
                         ${p.name}
                     </div>
                 `;
@@ -615,26 +659,25 @@
             });
         }
 
-        // --- ฐานข้อมูลสินค้า ---
         function renderInventory() {
             const tbody = document.getElementById('inventory-list');
             tbody.innerHTML = '';
             
             if (products.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="4" class="p-6 text-center text-gray-500 font-bold bg-gray-50">ไม่มีสินค้า เริ่มเพิ่มเลย!</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" class="p-8 text-center text-blue-300 font-medium">ไม่มีสินค้าในคลัง...</td></tr>';
                 return;
             }
             
             products.forEach((p, index) => {
                 const tr = document.createElement('tr');
-                tr.className = 'hover:bg-[#FDFD96]/40 transition-colors';
+                tr.className = 'hover:bg-blue-50/30 transition-colors';
                 tr.innerHTML = `
-                    <td class="p-3 border-r-2 border-black border-dashed font-mono text-sm">${p.barcode}</td>
-                    <td class="p-3 border-r-2 border-black border-dashed">${p.name}</td>
-                    <td class="p-3 border-r-2 border-black border-dashed text-right font-mono">${p.price.toFixed(2)}</td>
-                    <td class="p-3 text-center">
-                        <button onclick="openProductModal(${index})" class="pixel-btn bg-[#A2D2FF] px-2 py-1 mr-2 text-xs" title="แก้ไข">EDIT</button>
-                        <button onclick="confirmDelete(${index})" class="pixel-btn bg-[#FFC8DD] px-2 py-1 text-xs" title="ลบ">DEL</button>
+                    <td class="p-4 text-sm text-gray-500">${p.barcode}</td>
+                    <td class="p-4 font-medium text-gray-700">${p.name}</td>
+                    <td class="p-4 text-right royal-font text-[#4FC3F7] font-bold">${p.price.toFixed(2)}</td>
+                    <td class="p-4 text-center">
+                        <button onclick="openProductModal(${index})" class="w-8 h-8 rounded-full bg-blue-50 text-blue-500 hover:bg-blue-100 hover:text-blue-600 transition-colors mr-1 shadow-sm" title="แก้ไข"><i class="fas fa-pen text-xs"></i></button>
+                        <button onclick="confirmDelete(${index})" class="w-8 h-8 rounded-full bg-pink-50 text-pink-500 hover:bg-pink-100 hover:text-pink-600 transition-colors shadow-sm" title="ลบ"><i class="fas fa-trash text-xs"></i></button>
                     </td>
                 `;
                 tbody.appendChild(tr);
@@ -648,11 +691,11 @@
             const form = document.getElementById('product-form');
             
             if (index === -1) {
-                title.textContent = 'เพิ่มไอเทมใหม่';
+                title.innerHTML = '<i class="fas fa-star text-yellow-400 mr-2"></i> เพิ่มสินค้าใหม่';
                 form.reset();
                 document.getElementById('edit-index').value = -1;
             } else {
-                title.textContent = 'แก้ไขไอเทม';
+                title.innerHTML = '<i class="fas fa-pen text-blue-400 mr-2"></i> แก้ไขข้อมูลสินค้า';
                 const p = products[index];
                 document.getElementById('prod-barcode').value = p.barcode;
                 document.getElementById('prod-name').value = p.name;
@@ -663,9 +706,7 @@
             setTimeout(() => document.getElementById('prod-barcode').focus(), 100);
         }
 
-        function closeProductModal() {
-            document.getElementById('product-modal').classList.add('hidden');
-        }
+        function closeProductModal() { document.getElementById('product-modal').classList.add('hidden'); }
 
         function saveProduct(e) {
             e.preventDefault();
@@ -675,20 +716,15 @@
             const editIndex = parseInt(document.getElementById('edit-index').value);
             
             const isDuplicate = products.some((p, idx) => p.barcode === barcode && idx !== editIndex);
-            if (isDuplicate) {
-                showToast('รหัสนี้มีในระบบแล้ว!', 'error');
-                return;
-            }
+            if (isDuplicate) { showToast('รหัสนี้ถูกใช้ไปแล้วค่ะ', 'error'); return; }
             
             if (editIndex === -1) {
                 products.push({ barcode, name, price });
-                showToast('บันทึกไอเทมใหม่แล้ว!');
+                showToast('เพิ่มสินค้าเข้าระบบแล้ว');
             } else {
                 products[editIndex] = { barcode, name, price };
-                showToast('อัปเดตไอเทมสำเร็จ!');
-                cart.forEach(item => {
-                    if(item.barcode === barcode) { item.name = name; item.price = price; }
-                });
+                showToast('แก้ไขข้อมูลสำเร็จ');
+                cart.forEach(item => { if(item.barcode === barcode) { item.name = name; item.price = price; } });
                 updateCartDisplay();
             }
             saveProductsToStorage();
@@ -696,50 +732,44 @@
             closeProductModal();
         }
 
-        // Custom Confirm Logic
         let confirmAction = null;
         function confirmDelete(index) {
             const p = products[index];
-            document.getElementById('confirm-message').textContent = `ทิ้ง "${p.name}" ใช่ไหม?`;
+            document.getElementById('confirm-message').textContent = `ต้องการลบ "${p.name}" ออกจากคลังใช่ไหม?`;
             confirmAction = function() {
                 products.splice(index, 1);
                 saveProductsToStorage();
                 renderInventory();
-                showToast('ลบไอเทมเรียบร้อย');
+                showToast('ลบสินค้าเรียบร้อย');
                 closeConfirmModal();
             };
             document.getElementById('confirm-modal').classList.remove('hidden');
         }
 
-        document.getElementById('btn-confirm-yes').onclick = () => {
-            if(confirmAction) confirmAction();
-        };
-
-        function closeConfirmModal() {
-            document.getElementById('confirm-modal').classList.add('hidden');
-            confirmAction = null;
-        }
+        document.getElementById('btn-confirm-yes').onclick = () => { if(confirmAction) confirmAction(); };
+        function closeConfirmModal() { document.getElementById('confirm-modal').classList.add('hidden'); confirmAction = null; }
 
         function generateRandomBarcode() {
-            const randomNum = Math.floor(1000 + Math.random() * 9000);
-            document.getElementById('prod-barcode').value = `B${randomNum}`;
+            const randomNum = Math.floor(10000 + Math.random() * 90000);
+            document.getElementById('prod-barcode').value = `PR${randomNum}`;
         }
 
+        // เปลี่ยนเสียงตื๊ดๆ เป็นเสียงนุ่มๆ คล้ายระฆัง/คริสตัล (Sine Wave)
         function playErrorSound() {
             try {
                 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 const oscillator = audioCtx.createOscillator();
                 const gainNode = audioCtx.createGain();
-                oscillator.type = 'square'; // เสียง 8-bit
-                oscillator.frequency.value = 100; // เสียงต่ำตื๊ดๆ
-                gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+                oscillator.type = 'sine'; 
+                oscillator.frequency.setValueAtTime(400, audioCtx.currentTime); // โน้ตเริ่มต้น
+                oscillator.frequency.exponentialRampToValueAtTime(200, audioCtx.currentTime + 0.2); // เสียงหล่นลงนุ่มๆ
+                gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
                 oscillator.connect(gainNode);
                 gainNode.connect(audioCtx.destination);
                 oscillator.start();
-                oscillator.stop(audioCtx.currentTime + 0.15);
-            } catch (e) {
-                console.log("Audio not supported");
-            }
+                oscillator.stop(audioCtx.currentTime + 0.2);
+            } catch (e) { console.log("Audio not supported"); }
         }
     </script>
 </body>
