@@ -210,23 +210,66 @@
                 <p class="text-4xl text-pink-600 royal-font font-bold" id="modal-total">0.00</p>
             </div>
 
-            <div class="mb-4">
-                <label class="text-gray-500 text-sm ml-2">รับเงินจากลูกค้า (บาท)</label>
-                <input type="number" id="receive-amount" class="w-full bg-white border-2 border-pink-200 p-3 rounded-xl text-2xl text-center focus:outline-none focus:border-pink-500 mt-1 shadow-inner" oninput="calcChange()" placeholder="0.00">
-                <div class="flex gap-2 mt-2 justify-center">
-                    <button onclick="addReceive(100)" class="px-3 py-1 bg-pink-100 text-pink-600 rounded-lg text-sm hover:bg-pink-200">+100</button>
-                    <button onclick="addReceive(500)" class="px-3 py-1 bg-pink-100 text-pink-600 rounded-lg text-sm hover:bg-pink-200">+500</button>
-                    <button onclick="addReceive(1000)" class="px-3 py-1 bg-pink-100 text-pink-600 rounded-lg text-sm hover:bg-pink-200">+1000</button>
-                    <button onclick="exactAmount()" class="px-3 py-1 bg-blue-100 text-blue-600 rounded-lg text-sm hover:bg-blue-200">พอดีเป๊ะ</button>
+            <!-- แท็บเลือกวิธีชำระเงิน -->
+            <div class="flex gap-2 mb-4 bg-gray-50 p-1.5 rounded-2xl border border-gray-100 shadow-inner">
+                <button id="btn-pay-cash" onclick="setPaymentMethod('cash')" class="flex-1 py-2.5 rounded-xl bg-white shadow-sm text-pink-500 font-bold transition flex items-center justify-center gap-2">
+                    <i class="fas fa-money-bill-wave"></i> เงินสด
+                </button>
+                <button id="btn-pay-qr" onclick="setPaymentMethod('qr')" class="flex-1 py-2.5 rounded-xl text-gray-400 font-bold transition hover:bg-white/50 flex items-center justify-center gap-2">
+                    <i class="fas fa-qrcode"></i> โอนเงิน (QR)
+                </button>
+            </div>
+
+            <!-- ส่วนรับเงินสด -->
+            <div id="cash-section">
+                <div class="mb-4">
+                    <label class="text-gray-500 text-sm ml-2">รับเงินจากลูกค้า (บาท)</label>
+                    <input type="number" id="receive-amount" class="w-full bg-white border-2 border-pink-200 p-3 rounded-xl text-2xl text-center focus:outline-none focus:border-pink-500 mt-1 shadow-inner" oninput="calcChange()" placeholder="0.00">
+                    <div class="flex gap-2 mt-2 justify-center">
+                        <button onclick="addReceive(100)" class="px-3 py-1 bg-pink-100 text-pink-600 rounded-lg text-sm hover:bg-pink-200">+100</button>
+                        <button onclick="addReceive(500)" class="px-3 py-1 bg-pink-100 text-pink-600 rounded-lg text-sm hover:bg-pink-200">+500</button>
+                        <button onclick="addReceive(1000)" class="px-3 py-1 bg-pink-100 text-pink-600 rounded-lg text-sm hover:bg-pink-200">+1000</button>
+                        <button onclick="exactAmount()" class="px-3 py-1 bg-blue-100 text-blue-600 rounded-lg text-sm hover:bg-blue-200">พอดีเป๊ะ</button>
+                    </div>
+                </div>
+
+                <div class="bg-blue-50 rounded-2xl p-4 mb-6 text-center border border-blue-100">
+                    <p class="text-blue-400 text-sm mb-1">เงินทอนที่ต้องคืน</p>
+                    <p class="text-4xl text-blue-500 royal-font font-bold" id="modal-change">0.00</p>
                 </div>
             </div>
 
-            <div class="bg-blue-50 rounded-2xl p-4 mb-6 text-center border border-blue-100">
-                <p class="text-blue-400 text-sm mb-1">เงินทอนที่ต้องคืน</p>
-                <p class="text-4xl text-blue-500 royal-font font-bold" id="modal-change">0.00</p>
+            <!-- ส่วนรับเงินโอน QR (ซ่อนไว้เป็นค่าเริ่มต้น) -->
+            <div id="qr-section" class="hidden text-center py-4 mb-4">
+                <div class="bg-blue-50 p-5 rounded-3xl border-2 border-blue-200 border-dashed flex flex-col items-center justify-center">
+                    
+                    <!-- Setup PromptPay (Shows if no ID) -->
+                    <div id="promptpay-setup" class="w-full mb-3 hidden">
+                        <p class="text-blue-600 text-sm mb-2 font-bold"><i class="fas fa-cog"></i> ตั้งค่าพร้อมเพย์รับเงิน</p>
+                        <div class="flex gap-2">
+                            <input type="text" id="promptpay-id" placeholder="เบอร์โทรศัพท์ / บัตรปชช." class="w-full px-3 py-2 rounded-xl border-2 border-blue-200 text-sm focus:outline-none focus:border-blue-400">
+                            <button onclick="savePromptPay()" class="bg-[#87CEEB] text-white px-4 py-2 rounded-xl text-sm font-bold shadow-sm hover:bg-blue-400 transition">บันทึก</button>
+                        </div>
+                    </div>
+
+                    <!-- QR Code Display -->
+                    <div id="promptpay-display" class="flex flex-col items-center w-full">
+                        <div class="bg-white p-3 rounded-2xl shadow-sm mb-3 relative group w-48 h-48 flex justify-center items-center border border-blue-100">
+                            <img id="promptpay-img" src="" alt="PromptPay QR" class="max-w-full max-h-full rounded-xl hidden">
+                            <i id="promptpay-placeholder" class="fas fa-qrcode text-5xl text-gray-200"></i>
+                            
+                            <button onclick="editPromptPay()" class="absolute top-2 right-2 bg-white/90 text-blue-500 w-8 h-8 rounded-full shadow hover:bg-blue-50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center" title="แก้ไขเบอร์พร้อมเพย์">
+                                <i class="fas fa-pencil-alt text-xs"></i>
+                            </button>
+                        </div>
+                        <p class="text-blue-600 font-bold text-2xl mb-1 royal-font" id="qr-amount-text">0.00 ฿</p>
+                        <p class="text-xs text-gray-500 bg-white px-3 py-1.5 rounded-full shadow-sm border border-gray-100" id="qr-account-text">พร้อมเพย์: ยังไม่ตั้งค่า</p>
+                    </div>
+                    
+                </div>
             </div>
 
-            <button onclick="confirmTransaction()" class="btn-princess w-full py-4 text-xl rounded-2xl font-bold tracking-wide">
+            <button onclick="confirmTransaction()" class="btn-princess w-full py-4 text-xl rounded-2xl font-bold tracking-wide mt-2">
                 สำเร็จการขาย <i class="fas fa-check-circle ml-1"></i>
             </button>
         </div>
@@ -270,6 +313,8 @@
         let cart = [];
         let salesHistory = JSON.parse(localStorage.getItem('pos_sales_history') || '[]');
         let currentTotal = 0;
+        let currentPaymentMethod = 'cash'; // เพิ่มตัวแปรเก็บสถานะวิธีชำระเงิน
+        let promptpayId = localStorage.getItem('pos_promptpay_id') || ''; // เก็บข้อมูลพร้อมเพย์
 
         // Initialize App
         window.onload = () => {
@@ -428,15 +473,40 @@
         }
 
         // --- CHECKOUT & CHANGE ---
+        function setPaymentMethod(method) {
+            currentPaymentMethod = method;
+            const btnCash = document.getElementById('btn-pay-cash');
+            const btnQr = document.getElementById('btn-pay-qr');
+            const secCash = document.getElementById('cash-section');
+            const secQr = document.getElementById('qr-section');
+
+            if (method === 'cash') {
+                btnCash.className = "flex-1 py-2.5 rounded-xl bg-white shadow-sm text-pink-500 font-bold transition flex items-center justify-center gap-2";
+                btnQr.className = "flex-1 py-2.5 rounded-xl text-gray-400 font-bold transition hover:bg-white/50 flex items-center justify-center gap-2";
+                secCash.classList.remove('hidden');
+                secQr.classList.add('hidden');
+                setTimeout(() => document.getElementById('receive-amount').focus(), 50);
+            } else {
+                btnQr.className = "flex-1 py-2.5 rounded-xl bg-white shadow-sm text-[#87CEEB] font-bold transition flex items-center justify-center gap-2";
+                btnCash.className = "flex-1 py-2.5 rounded-xl text-gray-400 font-bold transition hover:bg-white/50 flex items-center justify-center gap-2";
+                secCash.classList.add('hidden');
+                secQr.classList.remove('hidden');
+            }
+        }
+
         function openCheckoutModal() {
             if (cart.length === 0) {
                 showModal('ตะกร้าว่างเปล่า', 'ช่วยหยิบสินค้าใส่ตะกร้าก่อนคิดเงินด้วยนะเพคะ!');
                 return;
             }
-            document.getElementById('modal-total').innerText = currentTotal.toLocaleString();
+            document.getElementById('modal-total').innerText = currentTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
             document.getElementById('receive-amount').value = '';
             document.getElementById('modal-change').innerText = '0.00';
             document.getElementById('modal-change').className = 'text-4xl text-gray-300 royal-font font-bold';
+            
+            setPaymentMethod('cash'); // รีเซ็ตเป็นเงินสดเสมอเมื่อเปิดหน้าต่าง
+            renderPromptPayQR(); // สร้างและอัปเดตคิวอาร์โค้ด
+            
             document.getElementById('checkout-modal').classList.remove('hidden');
             setTimeout(() => document.getElementById('receive-amount').focus(), 100);
         }
@@ -466,17 +536,74 @@
                 changeEl.innerText = change.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 changeEl.className = 'text-4xl text-blue-500 royal-font font-bold';
             } else {
-                changeEl.innerText = 'ขาดอีก ' + Math.abs(change).toLocaleString();
+                changeEl.innerText = 'ขาดอีก ' + Math.abs(change).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
                 changeEl.className = 'text-2xl text-red-400 royal-font font-bold';
             }
         }
 
-        function confirmTransaction() {
-            let receive = parseFloat(document.getElementById('receive-amount').value) || 0;
-            if (receive < currentTotal) {
+        // --- PROMPTPAY QR GENERATION ---
+        function renderPromptPayQR() {
+            const setupDiv = document.getElementById('promptpay-setup');
+            const imgEl = document.getElementById('promptpay-img');
+            const placeholderEl = document.getElementById('promptpay-placeholder');
+            const accountText = document.getElementById('qr-account-text');
+            const amountText = document.getElementById('qr-amount-text');
+
+            amountText.innerText = currentTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}) + ' ฿';
+
+            if (!promptpayId) {
+                setupDiv.classList.remove('hidden');
+                imgEl.classList.add('hidden');
+                placeholderEl.classList.remove('hidden');
+                accountText.innerText = 'โปรดตั้งค่าพร้อมเพย์เพื่อสร้าง QR';
+            } else {
+                setupDiv.classList.add('hidden');
+                imgEl.classList.remove('hidden');
+                placeholderEl.classList.add('hidden');
+                
+                // จัดฟอร์แมตเบอร์โทรให้อ่านง่าย
+                let displayId = promptpayId;
+                if(promptpayId.length === 10) {
+                    displayId = promptpayId.replace(/(\d{3})(\d{3})(\d{4})/, '$1-$2-$3');
+                } else if(promptpayId.length === 13) {
+                    displayId = promptpayId.replace(/(\d{1})(\d{4})(\d{5})(\d{2})(\d{1})/, '$1-$2-$3-$4-$5');
+                }
+                accountText.innerText = 'พร้อมเพย์: ' + displayId;
+
+                // ใช้บริการ promptpay.io เพื่อสร้างรูปภาพ QR Code (แบบระบุยอดเงิน)
+                imgEl.src = `https://promptpay.io/${promptpayId}/${currentTotal}.png`;
+            }
+        }
+
+        function savePromptPay() {
+            const input = document.getElementById('promptpay-id').value.trim();
+            const digitsOnly = input.replace(/\D/g, ''); // ลบอักขระที่ไม่ใช่ตัวเลขออก
+            
+            if (digitsOnly.length === 10 || digitsOnly.length === 13) {
+                promptpayId = digitsOnly;
+                localStorage.setItem('pos_promptpay_id', promptpayId);
+                renderPromptPayQR();
+                playSound('success');
+            } else {
                 playSound('error');
-                showModal('เงินไม่พอ', 'รับเงินมาน้อยกว่าราคาสินค้านะเพคะ!');
-                return;
+                showModal('ข้อมูลไม่ถูกต้อง', 'กรุณาระบุเบอร์โทรศัพท์ 10 หลัก หรือ เลขบัตรประชาชน 13 หลัก นะเพคะ');
+            }
+        }
+
+        function editPromptPay() {
+            document.getElementById('promptpay-setup').classList.remove('hidden');
+            document.getElementById('promptpay-id').value = promptpayId;
+            document.getElementById('promptpay-id').focus();
+        }
+
+        function confirmTransaction() {
+            if (currentPaymentMethod === 'cash') {
+                let receive = parseFloat(document.getElementById('receive-amount').value) || 0;
+                if (receive < currentTotal) {
+                    playSound('error');
+                    showModal('เงินไม่พอ', 'รับเงินมาน้อยกว่าราคาสินค้านะเพคะ!');
+                    return;
+                }
             }
 
             // DEDUCT STOCK CORRECTLY
@@ -487,11 +614,12 @@
                 }
             });
 
-            // Save History
+            // Save History (เพิ่ม method)
             salesHistory.push({ 
                 date: new Date().toLocaleString('th-TH'),
                 items: [...cart], 
-                total: currentTotal 
+                total: currentTotal,
+                method: currentPaymentMethod 
             });
 
             // Sync to LocalStorage
@@ -600,10 +728,15 @@
             }
 
             let totalRevenue = 0;
+            let totalCash = 0;
+            let totalQr = 0;
             let productSales = {};
 
             salesHistory.forEach(tx => {
                 totalRevenue += tx.total;
+                if (tx.method === 'qr') totalQr += tx.total;
+                else totalCash += tx.total; // ให้ค่าเริ่มต้นเก่าๆ ที่ไม่มี method เป็นเงินสดไปเลย
+
                 tx.items.forEach(item => {
                     productSales[item.name] = (productSales[item.name] || 0) + item.qty;
                 });
@@ -616,6 +749,17 @@
                 <div class="bg-gradient-to-r from-yellow-50 to-yellow-100 p-6 rounded-2xl border border-yellow-200 text-center shadow-inner">
                     <p class="text-yellow-700 text-sm mb-2">รายได้รวมทั้งหมดในพระคลัง</p>
                     <div class="text-5xl font-bold text-gold royal-font">${totalRevenue.toLocaleString()} ฿</div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mt-4 mb-6">
+                    <div class="bg-white p-4 rounded-xl text-center border border-pink-100 shadow-sm">
+                        <p class="text-gray-500 text-xs mb-1"><i class="fas fa-money-bill-wave text-pink-400"></i> เงินสด</p>
+                        <p class="text-2xl font-bold text-pink-500 royal-font">${totalCash.toLocaleString()} ฿</p>
+                    </div>
+                    <div class="bg-white p-4 rounded-xl text-center border border-[#87CEEB] shadow-sm">
+                        <p class="text-gray-500 text-xs mb-1"><i class="fas fa-qrcode text-[#87CEEB]"></i> โอนเงิน (QR)</p>
+                        <p class="text-2xl font-bold text-[#87CEEB] royal-font">${totalQr.toLocaleString()} ฿</p>
+                    </div>
                 </div>
                 
                 <h3 class="font-bold text-gray-700 mt-6 mb-3"><i class="fas fa-medal text-gold mr-2"></i>สินค้ายอดฮิต</h3>
